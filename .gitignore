@@ -1,0 +1,34 @@
+# MATLAB autosave / backup files
+*.asv
+*.m~
+*.mat~
+
+# MATLAB generated/cache files
+*.mex*
+*.mlappinstall
+*.mltbx
+*.slxc
+*.slxc.d
+slprj/
+sccprj/
+codegen/
+*_ert_rtw/
+*_grt_rtw/
+*_rtw/
+
+# MATLAB reports / profiler / temporary output
+profile_results/
+*.prof
+*.coverage
+
+# Local editor / OS clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Large/local scratch data
+scratch/
+tmp/
+temp/
