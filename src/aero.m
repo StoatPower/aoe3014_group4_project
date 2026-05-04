@@ -70,8 +70,15 @@ classdef aero
             V_to = 1.2 * sqrt(2 * W0 / (rho * S * CL_max));
         end
 
+        function L = L(V, CL, rho, S)
+            %L Compute lift force from dynamic pressure and lift
+            %   coefficient.
+            L = (1/2) * rho * V^2 * S * CL;
+        end
+
         function D = D(V, CD, rho, S)
-            %D Compute drag force from dynamic pressure and drag coefficient.
+            %D Compute drag force from dynamic pressure and drag 
+            %   coefficient.
             D = (1/2) * rho * V^2 * S * CD;
         end
 
@@ -79,6 +86,40 @@ classdef aero
             %THRUST Compute thrust required for a flight-path angle.
             %   Uses gamma in degrees.
             T = D + W * sind(gamma);
+        end
+
+        function x = x_distance(V, t, gamma)
+            %X_DISTANCE Compute the horizontal distance for a segment in
+            %   meters. Uses gamma in degrees.
+            x = V * t * cosd(gamma);
+        end
+
+        function x_to = x_to(V_to, L, D, T_max, W, mu_r, g)
+            L_avg = 0.5*L;
+            D_avg = 0.5*D;
+            x_num = V_to^2*(W/g);
+            F_eff = T_max - (D_avg + mu_r*(W - L_avg));
+            x_to = x_num / (2*F_eff);
+            a_avg = F_eff / (W/g);
+            fprintf("V_to   = %.2f m/s\n", V_to)
+            fprintf("L_avg  = %.3e N\n", L_avg)
+            fprintf("D_avg  = %.3e N\n", D_avg)
+            fprintf("Tmax   = %.3e N\n", T_max)
+            fprintf("F_eff  = %.3e N\n", F_eff)
+            fprintf("a_avg  = %.3f m/s^2\n", a_avg)
+            fprintf("x_to   = %.1f m\n", x_to)
+        end
+
+        function t = t_max_takeoff_landing(x_max, V)
+            %T_MAX_TAKEOFF_LANDING Compute the maximum 
+            t = x_max / V;
+        end
+
+        function t = t_climb_descent(V, h, gamma)
+            %T_CLIMB_DESCENT Compute the time it takes to traverse a climb or 
+            %   descent segment with height change h. 
+            %   Uses gamma in degrees.
+            t = h / (V*sind(gamma));
         end
     end
 end

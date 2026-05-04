@@ -18,9 +18,10 @@ function p = params()
     p.m_fuel_max = 257000;      % kg
     p.m_takeoff_max = 575000;   % kg
     
-    % Thrust / fuel
+    % Thrust / fuel / avg rolling friction
     p.T_max_lbf = 140000;       % lbf
     p.T_max = p.T_max_lbf * 4.4482216153; % N
+    p.mu_r = 0.03;
     
     p.SFC_lbf = 0.5;            % lbm fuel / (lbf thrust * hr)
     

@@ -27,12 +27,6 @@ function out = takeoff(polars_path, opts)
     
     eta = aero.lift_curve_slope_factor(a0, p.AR);
     out.eta = eta;
-    
-    % 3D CL is at 2D cl_max for takeoff
-    out.CL = cl_max;
-
-    % 3D CD is at 2D cd_cl_max for takeoff
-    out.CD = cd_cl_max;
 
     % 3D CL max
     CL_max = aero.CL(cl_max, eta);
@@ -41,17 +35,29 @@ function out = takeoff(polars_path, opts)
     % 3D CD max
     CD_max = aero.CD(cd_cl_max, CL_max, p.e, p.AR);
     out.CD_max = CD_max;
+
+    % 3D CL is at 3D CL_max for takeoff
+    CL = CL_max;
+    out.CL = CL;
+
+    % 3D CD is at 3D CD_max for takeoff
+    CD = CD_max;
+    out.CD = CD;
     
     % Assumed initial weight
     W0 = aero.init_W0_perc(opts.m_fuel_perc, p.m_body, p.m_fuel_max, p.g);
     out.W0 = W0;
     
     % takeoff velocity
-    V_to = aero.takeoff_velocity(W0, CL_max, p.rho_ORD, p.S);
+    V_to = aero.takeoff_velocity(W0, p.rho_ORD, p.S, CL_max);
     out.V_to = V_to;
     
+    % total lift
+    L = aero.L(V_to, CL, p.rho_ORD, p.S);
+    out.L = L;
+
     % total drag
-    D = aero.D(V_to, CD_max, p.rho_ORD, p.S);
+    D = aero.D(V_to, CD, p.rho_ORD, p.S);
     out.D = D;
     
     % thrust requirement
@@ -60,6 +66,12 @@ function out = takeoff(polars_path, opts)
 
     % thrust under T_max?
     out.T_lt_Tmax = (T <= p.T_max);
+
+    % takeoff distance
+    x_to = aero.x_to(V_to, L, D, p.T_max, W0, p.mu_r, p.g);
+    out.x_to = x_to;
+
+    % 
 end
 
 
