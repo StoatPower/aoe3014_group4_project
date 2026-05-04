@@ -5,14 +5,14 @@ segments = ["Takeoff"; "Climb"; "Cruise"; "Descent"; "Landing"];
 
 % Clean data
 CL_clean = [0.80684; 0.8013; 0.31079; 0.5154 ; 0.6802];
-CD_clean = [0.055013; 0.0546; 0.012710; 0.02539; 0.0162];
+CD_clean = [0.055013; 0.0546; 0.012710; 0.02539; 0.2505];
 mf_clean = [332.67; 6812.7; 12403.974; 1.1211; 51.32];
 
 tbl_clean = make_flight_table(segments, CL_clean, CD_clean, mf_clean);
 
 % Iced data
 CL_iced = [0.82217; 0.6438; 0.28294; 0.2249; 0.4057];
-CD_iced = [0.06567; 0.0729; 0.018174; 0.0312; 0.0091];
+CD_iced = [0.06567; 0.0729; 0.018174; 0.0312; 0.0927];
 mf_iced = [338.82; 10454; 18698.711; 247.6; 37.54];
 
 tbl_iced = make_flight_table(segments, CL_iced, CD_iced, mf_iced);
