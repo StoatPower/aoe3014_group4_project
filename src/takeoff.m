@@ -52,6 +52,8 @@ function out = takeoff(polars_path, opts)
     T = aero.thrust(D, W0, 0);
     out.T = T;
 
+    % thrust under T_max?
+    out.T_lt_Tmax = T <= p.T_max;
 end
 
 
