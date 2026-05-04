@@ -36,8 +36,8 @@ function p = params()
     
     % Mission constraints
     p.R_max = 1927e3;           % m
-    p.x_takeoff_max = 13000 * 0.3048;  % m
-    p.x_landing_max = 13016 * 0.3048;  % m
+    p.x_ORD = 13000 * 0.3048;  % m
+    p.x_MIA = 13016 * 0.3048;  % m
     
     % Default design variables
     p.gamma_climb = deg2rad(3);

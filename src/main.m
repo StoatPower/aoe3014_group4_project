@@ -1,35 +1,42 @@
 clc
 clear
 
-path.clean = '..\data\outputs\clean.pol';
-path.iced_takeoff = '..\data\outputs\takeoff.pol';
-p = params();
+path.clean = '..\data\polars\clean.pol';
+path.iced_takeoff = '..\data\polars\takeoff.pol';
+path.outputs = '..\data\outputs\';
 
-fuel_perc = 0.17;
+fuel_fracs = linspace(0.05, 1.00, 96);
+run1 = run_takeoff_sweep(path, fuel_fracs, "course");
+disp(run1.best_clean_to)
+disp(run1.best_iced_to)
 
-clean_takeoff = takeoff(path.clean,'m_fuel_perc', fuel_perc)
+fuel_fracs = 0.14:0.001:0.17;
+run2 = run_takeoff_sweep(path, fuel_fracs, "fine");
+disp(run2.best_clean_to)
+disp(run2.best_iced_to)
 
-iced_takeoff = takeoff(path.iced_takeoff,'m_fuel_perc', fuel_perc)
+function out = run_takeoff_sweep(path, fuel_fracs, tag)
+    arguments
+        path
+        fuel_fracs double
+        tag string = "sweep"
+    end
+    out.tbl_clean_to = takeoff_sweep(path.clean, fuel_fracs);
+    out.tbl_iced_to = takeoff_sweep(path.iced_takeoff, fuel_fracs);
+    
+    writetable(out.tbl_clean_to, path.outputs + "takeoff_clean_" + tag + ".csv");
+    writetable(out.tbl_clean_to, path.outputs + "takeoff_iced_" + tag + ".csv");
 
-fuel_frac = linspace(0.1, 1.0, 50);
+    out.best_clean_to = best_valid(out.tbl_clean_to);
+    out.best_iced_to = best_valid(out.tbl_iced_to);
+end
 
-% for i = 1:length(fuel_frac)
-%     clean = takeoff(path.clean, 'm_fuel_perc', fuel_frac(i));
-%     iced_takeoff = takeoff(path.iced_takeoff, 'm_fuel_perc', fuel_frac(i));
-%     if clean.x_to <= p.x_takeoff_max
-%         feasible(i,1) = clean.x_to;
-%     else
-%         feasible(i,1) = -1;
-%     end
-%     if iced_takeoff.x_to <= p.x_takeoff_max
-%         feasible(i,2) = iced_takeoff.x_to;
-%     else
-%         feasible(i,2) = -1;
-%     end
-% end
+function best = best_valid(tbl)
+    ok = tbl(tbl.runway_ok, :);
 
-p.x_takeoff_max 
-
-p.m_fuel_max
-p.m_fuel_max * fuel_perc
-
+    if isempty(ok)
+        best = table();
+    else
+        best = ok(1, :); % highest fuel fraction if table is sorted descending
+    end
+end
