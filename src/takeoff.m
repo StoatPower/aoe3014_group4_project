@@ -60,18 +60,37 @@ function out = takeoff(polars_path, opts)
     D = aero.D(V_to, CD, p.rho_ORD, p.S);
     out.D = D;
     
-    % thrust requirement
-    T = aero.thrust(D, W0, 0);
-    out.T = T;
+    % take off thrust = max thrust
+    T_to = p.T_max;
+    out.T_to = T_to;
 
-    % thrust under T_max?
-    out.T_lt_Tmax = (T <= p.T_max);
-
-    % takeoff distance
-    x_to = aero.x_to(V_to, L, D, p.T_max, W0, p.mu_r, p.g);
+    % takeoff distance with rolling friction
+    x_to = aero.x_to(V_to, CL_max, CD_max, T_to, W0, p.rho_ORD, p.S, p.g, p.mu_r);
     out.x_to = x_to;
 
-    % 
+    % takeoff distance without rolling friction
+    % x_to_no_fric = aero.x_to(V_to, CL_max, CD_max, T_to, W0, p.rho_ORD, p.S, p.g, 0);
+    % out.x_to_no_fric = x_to_no_fric;
+
+    % takeoff time with rolling friction
+    t_to = aero.t_takeoff(x_to, V_to);
+    out.t_to = t_to;
+
+    % takeoff time without rolling friction
+    % t_to_no_fric = aero.t_takeoff(x_to_no_fric, V_to);
+    % out.t_to_no_fric = t_to_no_fric;
+
+    % mass flow rate 
+    mf_rate_to = aero.mass_flow_rate(T_to, p.SFC);
+    out.mf_rate_to = mf_rate_to;
+
+    % mass flow total
+    mf_total_to = aero.mass_flow_total(mf_rate_to, t_to);
+    out.mf_total_to = mf_total_to;
+
+    % final weight at take off
+    W_to = W0 - mf_total_to*p.g;
+    out.W_to = W_to;
 end
 
 

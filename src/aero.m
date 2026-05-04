@@ -82,10 +82,10 @@ classdef aero
             D = (1/2) * rho * V^2 * S * CD;
         end
 
-        function T = thrust(D, W, gamma)
+        function T_req = thrust_required(D, W, gamma)
             %THRUST Compute thrust required for a flight-path angle.
             %   Uses gamma in degrees.
-            T = D + W * sind(gamma);
+            T_req = D + W * sind(gamma);
         end
 
         function x = x_distance(V, t, gamma)
@@ -94,25 +94,19 @@ classdef aero
             x = V * t * cosd(gamma);
         end
 
-        function x_to = x_to(V_to, L, D, T_max, W, mu_r, g)
-            L_avg = 0.5*L;
-            D_avg = 0.5*D;
-            x_num = V_to^2*(W/g);
-            F_eff = T_max - (D_avg + mu_r*(W - L_avg));
-            x_to = x_num / (2*F_eff);
-            a_avg = F_eff / (W/g);
-            fprintf("V_to   = %.2f m/s\n", V_to)
-            fprintf("L_avg  = %.3e N\n", L_avg)
-            fprintf("D_avg  = %.3e N\n", D_avg)
-            fprintf("Tmax   = %.3e N\n", T_max)
-            fprintf("F_eff  = %.3e N\n", F_eff)
-            fprintf("a_avg  = %.3f m/s^2\n", a_avg)
-            fprintf("x_to   = %.1f m\n", x_to)
+        function x_to = x_to(V_to, CL_max, CD_max, T_to, W, rho, S, g, mu_r)
+            %X_TO Calculate the takeoff distance
+            V_ref = 0.7 * V_to;
+            q_ref = 0.5 * rho * V_ref^2;
+            L_ref = q_ref * S * CL_max;
+            D_ref = q_ref * S * CD_max;
+            F_eff = T_to - (D_ref + mu_r*(W - L_ref));
+            x_to = 1.44 * W^2 / (g * rho * S * CL_max * F_eff);
         end
 
-        function t = t_max_takeoff_landing(x_max, V)
-            %T_MAX_TAKEOFF_LANDING Compute the maximum 
-            t = x_max / V;
+        function t = t_takeoff(x_to, V_to)
+            %T_TAKEOFF Compute the time for takeoff
+            t = x_to / V_to;
         end
 
         function t = t_climb_descent(V, h, gamma)
@@ -120,6 +114,17 @@ classdef aero
             %   descent segment with height change h. 
             %   Uses gamma in degrees.
             t = h / (V*sind(gamma));
+        end
+
+        function mf_rate = mass_flow_rate(T, SFC)
+            %MASS_FLOW_RATE Calculate the mass flow rate from the 
+            %   thrust and specific fuel consumption
+            mf_rate = T * SFC;
+        end
+
+        function mf_total = mass_flow_total(mf_rate, time)
+            %MASS_FLOW_TOTAL Calculate the total mass flow over time.
+            mf_total = mf_rate * time;
         end
     end
 end
