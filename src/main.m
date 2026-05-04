@@ -25,7 +25,7 @@ function out = run_takeoff_sweep(path, fuel_fracs, tag)
     out.tbl_iced_to = takeoff_sweep(path.iced_takeoff, fuel_fracs);
     
     writetable(out.tbl_clean_to, path.outputs + "takeoff_clean_" + tag + ".csv");
-    writetable(out.tbl_clean_to, path.outputs + "takeoff_iced_" + tag + ".csv");
+    writetable(out.tbl_iced_to, path.outputs + "takeoff_iced_" + tag + ".csv");
 
     out.best_clean_to = best_valid(out.tbl_clean_to);
     out.best_iced_to = best_valid(out.tbl_iced_to);
