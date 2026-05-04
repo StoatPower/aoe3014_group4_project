@@ -5,7 +5,7 @@ segments = ["Takeoff"; "Climb"; "Cruise"; "Descent"; "Landing"];
 
 % Clean data
 CL_clean = [0.80684; 0.8013; 0.31079; 0.5154 ; 0.6802];
-CD_clean = [0.055013; 0.0546; 0.012710; 0.2539; 0.0162];
+CD_clean = [0.055013; 0.0546; 0.012710; 0.02539; 0.0162];
 mf_clean = [332.67; 6812.7; 12403.974; 1.1211; 51.32];
 
 tbl_clean = make_flight_table(segments, CL_clean, CD_clean, mf_clean);
