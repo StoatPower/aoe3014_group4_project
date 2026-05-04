@@ -29,9 +29,9 @@ classdef aero
             eta = pi * AR / (a0 + pi * AR);
         end
 
-        function CL = CL(cl_max, eta)
+        function CL = CL(cl, eta)
             % three-dimensional lift coefficient
-            CL = (2/3) * cl_max * eta;
+            CL = (2/3) * cl * eta;
         end
 
         function CDi = induced_drag(CL, e, AR) 
@@ -53,8 +53,8 @@ classdef aero
             W0 = (m_body + perc_fuel_max * m_fuel_max) * g;
         end
 
-        function V_to = takeoff_velocity(W0, rho, S, CL)
-            V_to = 1.2 * sqrt(2 * W0 / (rho * S * CL));
+        function V_to = takeoff_velocity(W0, rho, S, CL_max)
+            V_to = 1.2 * sqrt(2 * W0 / (rho * S * CL_max));
         end
 
         function D = D(V, CD, rho, S)
