@@ -5,10 +5,10 @@ path.clean = '..\data\polars\clean.pol';
 path.iced_takeoff = '..\data\polars\takeoff.pol';
 path.outputs = '..\data\outputs\';
 
-fuel_fracs = linspace(0.05, 1.00, 96);
-run1 = run_takeoff_sweep(path, fuel_fracs, "course");
-disp(run1.best_clean_to)
-disp(run1.best_iced_to)
+% fuel_fracs = linspace(0.05, 1.00, 96);
+% run1 = run_takeoff_sweep(path, fuel_fracs, "course");
+% disp(run1.best_clean_to)
+% disp(run1.best_iced_to)
 
 fuel_fracs = 0.14:0.001:0.17;
 run2 = run_takeoff_sweep(path, fuel_fracs, "fine");
